@@ -34,12 +34,13 @@ fork,vfork,clone调用的入口点是sys_fork,sys_vfork和sys_clone。这三个�
 do_fork()的原型如下：
 ```
 kernel/fork.c
-long do_fork(unsigned long clone_flags,
-	     unsigned long stack_start,
-             struct pt_regs *regs,
-             unsigned long stack_size,
-             int __user *parent_tidptr,
-             int __user *child_tidptr)；
+long do_fork(
+	unsigned long clone_flags,
+	unsigned long stack_start,
+        struct pt_regs *regs,
+        unsigned long stack_size,
+        int __user *parent_tidptr,
+        int __user *child_tidptr)；
 ```
 其中
 * clone_flags：一个标志集合，用来制定控制复制过程的一些属性。
