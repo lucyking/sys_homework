@@ -6,10 +6,9 @@
 
 在内核中用task_struct结构体来描述进程的具体属性。该结构定义在include/sched.h文件中。
 struct task_struct{
-	volatile long state; //保存了进程的当前状态
+	volatile long state; 
 	void *stack;
 	atomic_t usage;
-	
 	... ...
         ... ...
 
@@ -17,18 +16,18 @@ struct task_struct{
 
 task_struct中的成员除简单类型变量外，还包含了很多指向其他结构体的指针。
 比如说其中的volatile long state保存了进程的当前状态，state的可能取值有：
-  -TASK_RUNNING:进程等待被选中执行，无需等待外部事件
-  -TASK_INTERRUPTIBLE:处于等待或睡眠状态，等事件完成时，内核发送信号给该进程，其state转变成TASK_RUNNING状态。
-  -TASK_UNINTERRUPTIBLE:因内核指令而暂停的睡眠进程，不能被外部信号唤醒，只能由内核唤醒。
-  -TASK_STOPPED:进程停止运行，例如被调试器暂停。
-  -TASK_TRACED:被调试进程，用以区分常规的睡眠进程。
+  *TASK_RUNNING:进程等待被选中执行，无需等待外部事件
+  *TASK_INTERRUPTIBLE:处于等待或睡眠状态，等事件完成时，内核发送信号给该进程，其state转变成TASK_RUNNING状态。
+  *TASK_UNINTERRUPTIBLE:因内核指令而暂停的睡眠进程，不能被外部信号唤醒，只能由内核唤醒。
+  *TASK_STOPPED:进程停止运行，例如被调试器暂停。
+  *TASK_TRACED:被调试进程，用以区分常规的睡眠进程。
 
 
 ###二 复制进程
 Linux用于复制进程的系统调用有三个：
-  -fork:重量级复制。建立一个父进程的完整副本，然后作为子进程执行。采用copy-on-write(COW)技术。
-  -vfork：与fork类似但不创建父进程副本。父子进程之间共享数据，可以节省大量cpu时间。不过由于fork采用COW技术，vfork在速度方面不再有优势。
-  -clone：用来产生线程，对父子进程之间的共享复制进行精确控制。
+  *fork:重量级复制。建立一个父进程的完整副本，然后作为子进程执行。采用copy-on-write(COW)技术。
+  *vfork：与fork类似但不创建父进程副本。父子进程之间共享数据，可以节省大量cpu时间。不过由于fork采用COW技术，vfork在速度方面不再有优势。
+  *clone：用来产生线程，对父子进程之间的共享复制进行精确控制。
 
 fork,vfork,clone调用的入口点是sys_fork，sys_vfork和sys_clone。这三个函数从寄存器中提取用户空间信息，然后再调用与硬件架构无关的do_fork函数，由其完成进程复制。
 do_fork()的原型如下：
@@ -40,11 +39,11 @@ long do_fork(unsigned long clone_flags,
              int __user *parent_tidptr,
              int __user *child_tidptr)
 其中
-  -clone_flags：一个标志集合，用来制定控制复制过程的一些属性。
-  -stack_start:用户状态下栈的起始地址。
-  -regs:指向寄存器集合的一个指针，其中以原始形式保存了调用参数。
-  -stack_size:用户状态下栈的大小。通常为0。
-  -parent_tidptr,child_tidptr:指向用户空间地址的两个指针，分别指向父子进程的PID。
+  *clone_flags：一个标志集合，用来制定控制复制过程的一些属性。
+  *stack_start:用户状态下栈的起始地址。
+  *regs:指向寄存器集合的一个指针，其中以原始形式保存了调用参数。
+  *stack_size:用户状态下栈的大小。通常为0。
+  *parent_tidptr,child_tidptr:指向用户空间地址的两个指针，分别指向父子进程的PID。
 不同的fork变体，主要是通过clone_flags来区分。
 
 ###三 调度器
