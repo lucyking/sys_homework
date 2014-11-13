@@ -16,7 +16,7 @@ struct task_struct{
 };
 ```
 task_struct中的成员除简单类型变量外，还包含了很多指向其他结构体的指针。
-比如说其中的*volatile long state*保存了进程的当前状态，state的可能取值有：
+比如说其中的**volatile long state**保存了进程的当前状态，state的可能取值有：
 * TASK_RUNNING:进程等待被选中执行，无需等待外部事件
 * TASK_INTERRUPTIBLE:处于等待或睡眠状态，等事件完成时，内核发送信号给该进程，其state转变成TASK_RUNNING状态。
 * TASK_UNINTERRUPTIBLE:因内核指令而暂停的睡眠进程，不能被外部信号唤醒，只能由内核唤醒。
@@ -30,7 +30,7 @@ Linux用于复制进程的系统调用有三个：
 * vfork：与fork类似但不创建父进程副本。父子进程之间共享数据，可以节省大量cpu时间。不过由于fork采用COW技术，vfork在速度方面不再有优势。
 * clone：用来产生线程，对父子进程之间的共享复制进行精确控制。
 
-fork,vfork,clone调用的入口点是sys_fork,sys_vfork和sys_clone。这三个函数从寄存器中提取用户空间信息，然后再调用与硬件架构无关的*do_fork*函数，由其完成进程复制。
+fork,vfork,clone调用的入口点是sys_fork,sys_vfork和sys_clone。这三个函数从寄存器中提取用户空间信息，然后再调用与硬件架构无关的**do_fork**函数，由其完成进程复制。
 do_fork()的原型如下：
 ```
 kernel/fork.c
@@ -51,7 +51,7 @@ long do_fork(
 不同的fork变体，主要是通过clone_flags来区分。
 
 ####三.调度器
-进程管理和调度由调度器完成。调度器的任务是实现各个任务共享CPU时间，创造程序并行执行的错觉。其任务主要分为两部分：一个是*调度策略*，另一个是*上下文切换*。
+进程管理和调度由调度器完成。调度器的任务是实现各个任务共享CPU时间，创造程序并行执行的错觉。其任务主要分为两部分：一个是**调度策略**，另一个是*上下文切换*。
 schedule函数是调度操作的基础。该函数定义在kernel/sched.c中。
 调度器使用一系列数据结构来排序和管理系统中的进程。可以通过直接的或者周期性的轮询来激活调度。
 
